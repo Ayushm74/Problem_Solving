@@ -1,36 +1,44 @@
 class Solution {
 public:
-    void dfs(int i, int j, vector<vector<char>>& grid, vector<vector<int>>& visited) {
+    bool valid(int i, int j, vector<vector<char>>& grid,
+               vector<vector<int>>& vis) {
         int n = grid.size();
         int m = grid[0].size();
 
-        if (i < 0 || j < 0 || i >= n || j >= m || visited[i][j] || grid[i][j] == '0') {
-            return;
-        }
+        return (i >= 0 && i < n &&
+                j >= 0 && j < m &&
+                grid[i][j] == '1' &&
+                !vis[i][j]);
+    }
 
-        visited[i][j] = 1;
+    void dfs(int i, int j,
+             vector<vector<int>>& vis,
+             vector<vector<char>>& grid) {
 
-        dfs(i + 1, j, grid, visited);
-        dfs(i - 1, j, grid, visited);
-        dfs(i, j + 1, grid, visited);
-        dfs(i, j - 1, grid, visited);
+        vis[i][j] = 1;
+
+        if(valid(i+1,j,grid,vis)) dfs(i+1,j,vis,grid);
+        if(valid(i-1,j,grid,vis)) dfs(i-1,j,vis,grid);
+        if(valid(i,j-1,grid,vis)) dfs(i,j-1,vis,grid);
+        if(valid(i,j+1,grid,vis)) dfs(i,j+1,vis,grid);
     }
 
     int numIslands(vector<vector<char>>& grid) {
         int n = grid.size();
         int m = grid[0].size();
 
-        vector<vector<int>> visited(n, vector<int>(m, 0));
+        vector<vector<int>> vis(n, vector<int>(m, 0));
         int count = 0;
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (grid[i][j] == '1' && !visited[i][j]) {
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                if(grid[i][j] == '1' && !vis[i][j]) {
+                    dfs(i, j, vis, grid);
                     count++;
-                    dfs(i, j, grid, visited);
                 }
             }
         }
+
         return count;
     }
 };
