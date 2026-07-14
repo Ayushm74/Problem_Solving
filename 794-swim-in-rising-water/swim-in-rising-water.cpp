@@ -52,8 +52,7 @@ public:
             if (node == V - 1)
                 return cost;
 
-            int r = node / n;
-            int c = node % n;
+           
 
             for (int nei : adj[node]) {
 
