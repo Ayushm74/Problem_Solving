@@ -24,43 +24,30 @@ public:
 
         filled(root);
 
-        queue<int> q;
+        queue<pair<int, int>> q;
         vector<int> vis(n, 0);
+        vector<int> ans;
 
-        q.push(target->val);
+        q.push({target->val, 0});
         vis[target->val] = 1;
 
-        int dist = 0;
-
         while (!q.empty()) {
-            int size = q.size();
+            auto [node, dis] = q.front();
+            q.pop();
 
-            if (dist == k) {
-                vector<int> ans;
-
-                while (!q.empty()) {
-                    ans.push_back(q.front());
-                    q.pop();
-                }
-
-                return ans;
+            if (dis == k) {
+                ans.push_back(node);
+                continue;
             }
 
-            while (size--) {
-                int node = q.front();
-                q.pop();
-
-                for (int x : adj[node]) {
-                    if (!vis[x]) {
-                        vis[x] = 1;
-                        q.push(x);
-                    }
+            for (int x : adj[node]) {
+                if (!vis[x]) {
+                    vis[x] = 1;
+                    q.push({x, dis + 1});
                 }
             }
-
-            dist++;
         }
 
-        return {};
+        return ans;
     }
 };
