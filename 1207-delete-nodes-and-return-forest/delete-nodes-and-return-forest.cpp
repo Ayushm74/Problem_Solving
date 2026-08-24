@@ -9,7 +9,6 @@ public:
     void ff(TreeNode* root, vector<int>& to_delete) {
         if (root == nullptr) return;
 
-        // Left child
         if (root->left != nullptr &&
             check(root->left->val, to_delete)) {
 
