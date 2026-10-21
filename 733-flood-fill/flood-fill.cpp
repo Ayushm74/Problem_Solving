@@ -1,40 +1,37 @@
 
 class Solution {
 public:
-    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
-        int n = image.size();
-        int m = image[0].size();
+    void dfs(vector<vector<int>>& image, int i, int j,
+             int originalColor, int color) {
+        int m = image.size();
+        int n = image[0].size();
 
+        // Check boundaries and original color
+        if (i < 0 || j < 0 || i >= m || j >= n ||
+            image[i][j] != originalColor) {
+            return;
+        }
+
+        // Change the pixel color
+        image[i][j] = color;
+
+        // Explore all 4 directions
+        dfs(image, i + 1, j, originalColor, color); // Down
+        dfs(image, i - 1, j, originalColor, color); // Up
+        dfs(image, i, j + 1, originalColor, color); // Right
+        dfs(image, i, j - 1, originalColor, color); // Left
+    }
+
+    vector<vector<int>> floodFill(vector<vector<int>>& image,
+                                  int sr, int sc, int color) {
         int originalColor = image[sr][sc];
 
-        if (originalColor == color) return image;
-
-        queue<pair<int, int>> q;
-        q.push({sr, sc});
-
-        image[sr][sc] = color;
-
-      int delRow[] = {-1,0,1,0};
-      int delCol[] = {0,-1,0,1};
-
-        while (!q.empty()) {
-            int x = q.front().first;
-            int y = q.front().second;
-            q.pop();
-
-            for (int i = 0; i < 4; i++) {
-                int nr = x + delRow[i];
-                int nc = y + delCol[i];
-
-                if (nr >= 0 && nr < n &&
-                    nc >= 0 && nc < m &&
-                    image[nr][nc] == originalColor) {
-
-                    image[nr][nc] = color;
-                    q.push({nr, nc});
-                }
-            }
+        // Avoid unnecessary DFS
+        if (originalColor == color) {
+            return image;
         }
+
+        dfs(image, sr, sc, originalColor, color);
 
         return image;
     }
